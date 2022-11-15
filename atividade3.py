@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 class Heroes:
     def __init__(self, key = None, fname = None, lname = None, hname = None, power = None, weakness = None, city = None, profession = None):
@@ -36,14 +37,13 @@ class Heroes:
         return self.profession
 
 def openFile():
-    inputFile = open(r"D:\Python\ED2\File Structures\atividade3\input\input1.txt")
-    outputFile = open("saida.txt", "w+")
-    tempfile = open("temp.txt", "w+")
+    inputFile = open(sys.argv[1], 'r')
+    outputFile = open(sys.argv[2], "w+")
+    tempfile = open(sys.argv[3], "w+")
     return inputFile, outputFile, tempfile
 
 def readFile(arquivo):
-    data = arquivo.readlines()
-    return data
+    return arquivo.readlines()
 
 def readHeader(header):
     # para ler todos os metadados do cabecalho corretamente
@@ -64,9 +64,6 @@ def readHeader(header):
     order = orderSplit[4].split("ORDER=")
     
     return size[1], top[1], registerQtd[1], sort[1], order[1] 
-
-def sortFile():
-    pass
 
 def readData(inputDataVector, heroes, tempfile, size):
     keyList = []
@@ -178,14 +175,20 @@ def heapSort(arr, rrnList):
 #######################################################################
 
 
-def sortingRegisters(tempfile, keyList, rrnList, sort, order):
+def sortingRegisters(tempfile, keyList, rrnList, sort):
     low = 0
     high = len(keyList) - 1
 
-    #insertionSort(keyList, rrnList)
-    #quickSort(keyList, rrnList, low, high)
-    #mergeSort(keyList, rrnList)
-    heapSort(keyList, rrnList)
+    if(sort == 'Q'):
+        quickSort(keyList, rrnList, low, high)
+    elif(sort == 'I'):
+        insertionSort(keyList, rrnList)
+    elif(sort == 'H'):
+        heapSort(keyList, rrnList)
+    elif(sort == 'M'):
+        mergeSort(keyList, rrnList)
+    else:
+        print("Invalid sort instruction.Exiting program...\n")
     return rrnList
 
 def storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, header, order):
@@ -213,11 +216,8 @@ def storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, h
 def main():
     inputFile, outputFile, tempFile = openFile()
     header = inputFile.readline()
-
-    
     size, top, registerQtd, sort, order = readHeader(header)
     inputDataVector = readFile(inputFile)
-
     heroes = Heroes()
     keyList, rrnList = readData(inputDataVector, heroes, tempFile, size)
     rrnListSorted = sortingRegisters(tempFile, keyList, rrnList, sort, order)
