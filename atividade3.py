@@ -179,16 +179,6 @@ def heapSort(arr, rrnList):
 
 
 def sortingRegisters(tempfile, keyList, rrnList, sort, order):
-    """#array = np.array(zip(keyList, rrnList))
-    #print(array)
-    pairs = list(zip(keyList, rrnList))
-    #print(pairs)
-    array = np.array(pairs)
-    #print(array)
-    sorted = np.sort(array)
-    print(sorted)
-    #keyList, rrnList = zip(*sorted)
-    #print(keyList, rrnList)"""
     low = 0
     high = len(keyList) - 1
 
@@ -197,11 +187,6 @@ def sortingRegisters(tempfile, keyList, rrnList, sort, order):
     #mergeSort(keyList, rrnList)
     heapSort(keyList, rrnList)
     return rrnList
-
-def sortingRegistersBeta(tempfile, keyList, rrnList, sort, order):
-    sorting = sorted(zip(keyList, rrnList))
-    keyList, rrnList = zip(*sorting)
-    return list(rrnList)        
 
 def storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, header, order):
     tempFile.seek(0)
@@ -229,18 +214,13 @@ def main():
     inputFile, outputFile, tempFile = openFile()
     header = inputFile.readline()
 
-    test = open("test.txt", "w")
-    #test2 = open("test2.txt", "w")
-
+    
     size, top, registerQtd, sort, order = readHeader(header)
     inputDataVector = readFile(inputFile)
 
     heroes = Heroes()
     keyList, rrnList = readData(inputDataVector, heroes, tempFile, size)
     rrnListSorted = sortingRegisters(tempFile, keyList, rrnList, sort, order)
-    #rrnListSorted = sortingRegistersBeta(tempFile, keyList, rrnList, sort, order)
-    test.write(f"negodrama{rrnListSorted}")
-    #test2.write(f"{rrnListSorted}")
     storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, header, order)
 
 
