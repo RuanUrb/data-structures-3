@@ -47,7 +47,7 @@ def openFile():
     if(not (os.path.exists(sys.argv[2]))):
         print("Output file path does not exist. Exiting program...\n")
         exit()
-    inputFile = open(sys.argv[1], 'r')
+    inputFile = open(sys.argv[1], 'r+')
     outputFile = open(sys.argv[2], "w+")
     return inputFile, outputFile
 
@@ -74,23 +74,29 @@ def readHeader(header):
     
     return size[1], top[1], registerQtd[1], sort[1], order[1] 
 
-def readData(inputDataVector, heroes, size):
+def readData(inputDataVector, inputFile, heroes):
     keyList = []
     rrnList = []
+    registerList = []
     rrn = 0
+    inputFile.seek(0)
     for lines in inputDataVector:
         data = lines.split("|")
         heroes = Heroes(key = data[0], fname = data[1], lname = data[2], hname = data[3], power = data[4], weakness = data[5], city = data[6], profession = data[7])
+        #coloca os dados nos vetores que serao utilizados
         keyList.append(data[0])
         rrnList.append(rrn)
         
         #tira o \n da profissao que atrapalha a formatação
         professionFormat = heroes.getProfession().strip()
-        string = f"{heroes.getKey()}|{heroes.getFname()}|{heroes.getLname()}|{heroes.getHname()}|{heroes.getPower()}|{heroes.getWeakness()}|{heroes.getCity()}|{professionFormat}|"  
+        string = f"{heroes.getKey()}|{heroes.getFname()}|{heroes.getLname()}|{heroes.getHname()}|{heroes.getPower()}|{heroes.getWeakness()}|{heroes.getCity()}|{professionFormat}|\n"  
+        registerList.append(string)
         rrn += 1
-    return keyList, rrnList
+    return keyList, rrnList, registerList
 
 ######################## SORTS ########################################
+"""Sorts foram modificados para que quando ocorra operações que modificam o vetor das chaves, a chave de rrn também seja modificada, porém de acordo com a
+ordem da lista de chaves. A performance não seria prejudicada por não haver comparações adicionais"""
 def insertionSort(array, rrnList):   
     for step in range(1, len(array)):
         key = array[step]
@@ -183,7 +189,7 @@ def heapSort(arr, rrnList):
 #######################################################################
 
 
-def sortingRegisters(keyList, rrnList, sort):
+def sortingRegisters(keyList, rrnList, sort, outputFile):
     low = 0
     high = len(keyList) - 1
 
@@ -196,37 +202,36 @@ def sortingRegisters(keyList, rrnList, sort):
     elif(sort == 'M'):
         mergeSort(keyList, rrnList)
     else:
-        print("Invalid sort instruction.Exiting program...\n")
+        outputFile.write("Invalid sort instruction.Exiting program...\n")
+        exit(1)
     return rrnList
 
-def storeOrganizedData(rrnListSorted, outputFile, size, registerQtd, header, order):
+def storeOrganizedData(rrnListSorted, outputFile, registerList, size, registerQtd, header, order):
+    #remove a quebra de linha da ordem
     order = order.strip()
-    '''
+
     if(order == 'C'):
         outputFile.write(header)
         for i in range(0, int(registerQtd)):
-            tempFile.seek(rrnListSorted[i] * (int(size)+2))
-            linha = tempFile.readline()
-            outputFile.write(f"{linha}")
+            outputFile.write(registerList[rrnListSorted[i]])
     elif(order == 'D'):
         outputFile.write(header)
         rrnListSorted.reverse()
         for i in range(0, int(registerQtd)):
-            tempFile.seek(rrnListSorted[i] * (int(size)+2))
-            linha = tempFile.readline()
-            outputFile.write(linha)
+            outputFile.write(registerList[rrnListSorted[i]])
     else:
-        outputFile.write("Erro no arquivo")        
-'''
+        outputFile.write("Erro no arquivo, ordem inexistente")
+        exit(1)        
+
 def main():
     inputFile, outputFile = openFile()
     header = inputFile.readline()
     size, top, registerQtd, sort, order = readHeader(header)
     inputDataVector = readFile(inputFile)
     heroes = Heroes()
-    keyList, rrnList = readData(inputDataVector, heroes, size)
-    rrnListSorted = sortingRegisters(keyList, rrnList, sort)
-    storeOrganizedData(rrnListSorted, outputFile, size, registerQtd, header, order)
+    keyList, rrnList, registerList = readData(inputDataVector, inputFile, heroes)
+    rrnListSorted = sortingRegisters(keyList, rrnList, sort, outputFile)
+    storeOrganizedData(rrnListSorted, outputFile, registerList, size, registerQtd, header, order)
 
 
 if __name__ == '__main__':
