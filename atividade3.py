@@ -39,8 +39,7 @@ class Heroes:
 def openFile():
     inputFile = open(sys.argv[1], 'r')
     outputFile = open(sys.argv[2], "w+")
-    tempfile = open(sys.argv[3], "w+")
-    return inputFile, outputFile, tempfile
+    return inputFile, outputFile
 
 def readFile(arquivo):
     return arquivo.readlines()
@@ -65,7 +64,7 @@ def readHeader(header):
     
     return size[1], top[1], registerQtd[1], sort[1], order[1] 
 
-def readData(inputDataVector, heroes, tempfile, size):
+def readData(inputDataVector, heroes, size):
     keyList = []
     rrnList = []
     rrn = 0
@@ -78,7 +77,6 @@ def readData(inputDataVector, heroes, tempfile, size):
         #tira o \n da profissao que atrapalha a formatação
         professionFormat = heroes.getProfession().strip()
         string = f"{heroes.getKey()}|{heroes.getFname()}|{heroes.getLname()}|{heroes.getHname()}|{heroes.getPower()}|{heroes.getWeakness()}|{heroes.getCity()}|{professionFormat}|"  
-        tempfile.write(f"{string:{size}}\n")
         rrn += 1
     return keyList, rrnList
 
@@ -175,7 +173,7 @@ def heapSort(arr, rrnList):
 #######################################################################
 
 
-def sortingRegisters(tempfile, keyList, rrnList, sort):
+def sortingRegisters(keyList, rrnList, sort):
     low = 0
     high = len(keyList) - 1
 
@@ -191,10 +189,7 @@ def sortingRegisters(tempfile, keyList, rrnList, sort):
         print("Invalid sort instruction.Exiting program...\n")
     return rrnList
 
-def storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, header, order):
-    tempFile.seek(0)
-    test = tempFile.readline()
-    
+def storeOrganizedData(rrnListSorted, outputFile, size, registerQtd, header, order):
     order = order.strip()
 
     if(order == 'C'):
@@ -214,14 +209,14 @@ def storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, h
         outputFile.write("Erro no arquivo")        
 
 def main():
-    inputFile, outputFile, tempFile = openFile()
+    inputFile, outputFile = openFile()
     header = inputFile.readline()
     size, top, registerQtd, sort, order = readHeader(header)
     inputDataVector = readFile(inputFile)
     heroes = Heroes()
-    keyList, rrnList = readData(inputDataVector, heroes, tempFile, size)
-    rrnListSorted = sortingRegisters(tempFile, keyList, rrnList, sort, order)
-    storeOrganizedData(rrnListSorted, outputFile, tempFile, size, registerQtd, header, order)
+    keyList, rrnList = readData(inputDataVector, heroes, size)
+    rrnListSorted = sortingRegisters(keyList, rrnList, sort)
+    storeOrganizedData(rrnListSorted, outputFile, size, registerQtd, header, order)
 
 
 if __name__ == '__main__':
