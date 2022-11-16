@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import os.path
 
 class Heroes:
     def __init__(self, key = None, fname = None, lname = None, hname = None, power = None, weakness = None, city = None, profession = None):
@@ -37,6 +38,15 @@ class Heroes:
         return self.profession
 
 def openFile():
+    if(len(sys.argv) != 3):
+        print("Incorrect number of parameters. Exiting program...\n")
+        exit()
+    if(not (os.path.exists(sys.argv[1]))):
+        print("Input file path does not exist. Exiting program...\n")
+        exit()
+    if(not (os.path.exists(sys.argv[2]))):
+        print("Output file path does not exist. Exiting program...\n")
+        exit()
     inputFile = open(sys.argv[1], 'r')
     outputFile = open(sys.argv[2], "w+")
     return inputFile, outputFile
@@ -191,7 +201,7 @@ def sortingRegisters(keyList, rrnList, sort):
 
 def storeOrganizedData(rrnListSorted, outputFile, size, registerQtd, header, order):
     order = order.strip()
-
+    '''
     if(order == 'C'):
         outputFile.write(header)
         for i in range(0, int(registerQtd)):
@@ -207,7 +217,7 @@ def storeOrganizedData(rrnListSorted, outputFile, size, registerQtd, header, ord
             outputFile.write(linha)
     else:
         outputFile.write("Erro no arquivo")        
-
+'''
 def main():
     inputFile, outputFile = openFile()
     header = inputFile.readline()
