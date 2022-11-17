@@ -1,4 +1,3 @@
-import numpy as np
 import sys
 import os.path
 
@@ -40,19 +39,23 @@ class Heroes:
 def openFile():
     if(len(sys.argv) != 3):
         print("Incorrect number of parameters. Exiting program...\n")
-        exit()
+        exit(1)
     if(not (os.path.exists(sys.argv[1]))):
         print("Input file path does not exist. Exiting program...\n")
-        exit()
-    if(not (os.path.exists(sys.argv[2]))):
-        print("Output file path does not exist. Exiting program...\n")
-        exit()
-    inputFile = open(sys.argv[1], 'r+')
+        exit(1)
+    if(os.path.getsize(sys.argv[1])):
+        print("Input file is empty. Exiting program...\n")
+        exit(1)
+    inputFile = open(sys.argv[1], 'r')
     outputFile = open(sys.argv[2], "w+")
     return inputFile, outputFile
 
 def readFile(arquivo):
-    return arquivo.readlines()
+    data = arquivo.readlines()
+    if(not data):
+        print("File only contains header. Exiting program...\n")
+        exit(1)
+    return data
 
 def readHeader(header):
     # para ler todos os metadados do cabecalho corretamente
@@ -202,7 +205,7 @@ def sortingRegisters(keyList, rrnList, sort, outputFile):
     elif(sort == 'M'):
         mergeSort(keyList, rrnList)
     else:
-        outputFile.write("Invalid sort instruction.Exiting program...\n")
+        outputFile.write("Invalid file: no such sort.")
         exit(1)
     return rrnList
 
@@ -220,7 +223,7 @@ def storeOrganizedData(rrnListSorted, outputFile, registerList, size, registerQt
         for i in range(0, int(registerQtd)):
             outputFile.write(registerList[rrnListSorted[i]])
     else:
-        outputFile.write("Erro no arquivo, ordem inexistente")
+        outputFile.write("Invalid file: no such order.")
         exit(1)        
 
 def main():
