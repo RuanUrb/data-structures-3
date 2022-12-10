@@ -4,9 +4,6 @@ import sys
 class IdxPrimario:
 
     # *** atributos
-    __arquivoDados    = None   # string
-    __arquivoIndices  = None   # string
-    __arquivoIndicesSec = None
     __tabelaIndicesP   = list() # lista de tuplas ( RRN , CC )
     __tabelaIndicesS = list()
 
@@ -14,12 +11,6 @@ class IdxPrimario:
     #-------------------------------------------------------
 
     def __init__(self, dataFile = None, inputFile = None, outputFile = None, debug = False):
-
-        if(dataFile == None or inputFile == None or outputFile == None):
-            raise Exception("Por favor, informe o diretório dos arquivos de dados e indices.")
-            exit(1)
-        else:
-            # abrindo arquivo de dados
             try:
                 self.__arquivoDados = open(dataFile, "r+")
             except FileNotFoundError:
@@ -68,11 +59,11 @@ class IdxPrimario:
                 print(f"canon key: {canonKey}")
                 if(canonKey != -1):
                     found = True
-                    registro = self.pesquisarPrimario(canonKey=canonKey, linhas = linhas, size = size) 
+                    registro = self.pesquisarPrimario(canonKey=canonKey, linhas = linhas) 
                     print(registro)
                     self.__arquivoOutput.write(registro)
             if(found != True):
-                self.__arquivoOutput.write("Nenhum registro encontrado")  
+                self.__arquivoOutput.write("Nenhum registro encontrado.")  
             self.__del__()
             #print(canonKey)
     def getIdxPrim(self):
@@ -147,7 +138,7 @@ class IdxPrimario:
             return i[1]
         return -1
 
-    def pesquisarPrimario(self, canonKey, linhas, size):
+    def pesquisarPrimario(self, canonKey, linhas):
         for i in self.getIdxPrim():
             #print(self.getIdxPrim())
             #print(i[0])
@@ -159,8 +150,8 @@ def main():
     if(len(sys.argv)!=4):
         print("Número incorreto de parâmetros. \nSaindo do programa...")
         exit(1)
-    obj = IdxPrimario(dataFile = sys.argv[1],
-     inputFile = sys.argv[2], outputFile= sys.argv[3])
+    IdxPrimario(dataFile = sys.argv[1],
+    inputFile = sys.argv[2], outputFile= sys.argv[3])
     
     
 
