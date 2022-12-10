@@ -16,18 +16,22 @@ class IdxPrimario:
     def __init__(self, dataFile = None, inputFile = None, outputFile = None, debug = False):
 
         if(dataFile == None or inputFile == None or outputFile == None):
-            raise Exception("Por favor, informe o diretório dos arquivos de dados e indices")
+            raise Exception("Por favor, informe o diretório dos arquivos de dados e indices.")
             exit(1)
         else:
             # abrindo arquivo de dados
             try:
                 self.__arquivoDados = open(dataFile, "r+")
-            except FileNotFoundError as error:
-                print(error)
+            except FileNotFoundError:
+                print("Arquivo de dados não encontrado.")
                 exit(1)
 
             #abrindo arquivo de input
-            self.__arquivoInput = open(inputFile, "r+")
+            try:
+                self.__arquivoInput = open(inputFile, "r+")
+            except FileNotFoundError:
+                print("Arquivo de entrada não encontrado.")
+                exit(1)
             self.__arquivoOutput = open(outputFile, "w+")
             # imprimindo a lista de
             #print(self.__tabelaIndicesP)
