@@ -16,7 +16,7 @@ class IdxPrimario:
     def __init__(self, dataFile = None, inputFile = None, outputFile = None, debug = False):
 
         if(dataFile == None or inputFile == None or outputFile == None):
-            raise Exception("Por favor, informe o nome dos arquivos de dados e indices")
+            raise Exception("Por favor, informe o diretório dos arquivos de dados e indices")
             exit(1)
         else:
             # abrindo arquivo de dados
@@ -138,7 +138,7 @@ class IdxPrimario:
 
     def pesquisarSecundario(self, consulta, i):
         print(f"{i[0]} + {consulta}")
-        if(i[0] == consulta.upper()):
+        if(consulta.upper() in i[0]):
             print(i[0])
             return i[1]
         return -1
@@ -152,8 +152,8 @@ class IdxPrimario:
         
 
 def main():
-    obj = IdxPrimario(dataFile = r"C:\Users\zania\OneDrive\Documentos\PYTHON\ED2\Arquivos\Atividade4\input\music.txt",
-     inputFile = r"C:\Users\zania\OneDrive\Documentos\PYTHON\ED2\Arquivos\Atividade4\input\entrada6.txt", outputFile= "output.txt")
+    obj = IdxPrimario(dataFile = r"C:\Users\Zeo\Desktop\KRY\musics.txt",
+     inputFile = r"C:\Users\Zeo\Desktop\KRY\ikimasho.txt", outputFile= r"C:\Users\Zeo\Desktop\KRY\domo.txt")
     
     
 
