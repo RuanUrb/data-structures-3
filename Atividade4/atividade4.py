@@ -1,6 +1,6 @@
 # ----------------------------------------------------
 # ----------------------------------------------------
-
+import sys
 class IdxPrimario:
 
     # *** atributos
@@ -152,8 +152,11 @@ class IdxPrimario:
         
 
 def main():
-    obj = IdxPrimario(dataFile = r"C:\Users\Zeo\Desktop\KRY\musics.txt",
-     inputFile = r"C:\Users\Zeo\Desktop\KRY\ikimasho.txt", outputFile= r"C:\Users\Zeo\Desktop\KRY\domo.txt")
+    if(len(sys.argv)!=4):
+        print("Número incorreto de parâmetros. \nSaindo do programa...")
+        exit(1)
+    obj = IdxPrimario(dataFile = sys.argv[1],
+     inputFile = sys.argv[2], outputFile= sys.argv[3])
     
     
 
