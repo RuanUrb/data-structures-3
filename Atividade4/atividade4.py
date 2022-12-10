@@ -1,5 +1,8 @@
 # ----------------------------------------------------
 # ----------------------------------------------------
+
+# Ruan Perondi Urbanjos & Andrei Fernandes Zani
+
 import sys
 class IdxPrimario:
 
