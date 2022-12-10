@@ -56,7 +56,6 @@ class IdxPrimario:
             found = False
             for i in self.__tabelaIndicesS:
                 canonKey = self.pesquisarSecundario(consulta = consulta, i = i)
-                print(f"canon key: {canonKey}")
                 if(canonKey != -1):
                     found = True
                     registro = self.pesquisarPrimario(canonKey=canonKey, linhas = linhas) 
@@ -64,6 +63,7 @@ class IdxPrimario:
                     self.__arquivoOutput.write(registro)
             if(found != True):
                 self.__arquivoOutput.write("Nenhum registro encontrado.")  
+                print("Nenhum registro encontrado.")
             self.__del__()
             #print(canonKey)
     def getIdxPrim(self):
@@ -103,9 +103,9 @@ class IdxPrimario:
         #print(key)
         return (key)
 
-    def imprimeTabelaIndices(self, tabela):
-        for element in tabela:
-            print(element)
+    #def imprimeTabelaIndices(self, tabela):
+        #for element in tabela:
+            #print(element)
 
     #destrutor
     def __del__(self):    
@@ -132,16 +132,12 @@ class IdxPrimario:
         return size[1], top[1], registerQtd[1], status[1]
 
     def pesquisarSecundario(self, consulta, i):
-        print(f"{i[0]} + {consulta}")
         if(consulta.upper() in i[0]):
-            print(i[0])
             return i[1]
         return -1
 
     def pesquisarPrimario(self, canonKey, linhas):
         for i in self.getIdxPrim():
-            #print(self.getIdxPrim())
-            #print(i[0])
             if i[1] == canonKey:
                 return linhas[int(i[0]) + 1]
         
