@@ -1,12 +1,12 @@
 # ----------------------------------------------------
 # ----------------------------------------------------
 
+# Ruan Perondi Urbanjos & Andrei Fernandes Zani
+
+import sys
 class IdxPrimario:
 
     # *** atributos
-    __arquivoDados    = None   # string
-    __arquivoIndices  = None   # string
-    __arquivoIndicesSec = None
     __tabelaIndicesP   = list() # lista de tuplas ( RRN , CC )
     __tabelaIndicesS = list()
 
@@ -14,20 +14,18 @@ class IdxPrimario:
     #-------------------------------------------------------
 
     def __init__(self, dataFile = None, inputFile = None, outputFile = None, debug = False):
-
-        if(dataFile == None or inputFile == None or outputFile == None):
-            raise Exception("Por favor, informe o nome dos arquivos de dados e indices")
-            exit(1)
-        else:
-            # abrindo arquivo de dados
             try:
                 self.__arquivoDados = open(dataFile, "r+")
-            except FileNotFoundError as error:
-                print(error)
+            except FileNotFoundError:
+                print("Arquivo de dados não encontrado.")
                 exit(1)
 
             #abrindo arquivo de input
-            self.__arquivoInput = open(inputFile, "r+")
+            try:
+                self.__arquivoInput = open(inputFile, "r+")
+            except FileNotFoundError:
+                print("Arquivo de entrada não encontrado.")
+                exit(1)
             self.__arquivoOutput = open(outputFile, "w+")
             # imprimindo a lista de
             #print(self.__tabelaIndicesP)
@@ -61,14 +59,14 @@ class IdxPrimario:
             found = False
             for i in self.__tabelaIndicesS:
                 canonKey = self.pesquisarSecundario(consulta = consulta, i = i)
-                print(f"canon key: {canonKey}")
                 if(canonKey != -1):
                     found = True
-                    registro = self.pesquisarPrimario(canonKey=canonKey, linhas = linhas, size = size) 
+                    registro = self.pesquisarPrimario(canonKey=canonKey, linhas = linhas) 
                     print(registro)
                     self.__arquivoOutput.write(registro)
             if(found != True):
-                self.__arquivoOutput.write("Nenhum registro encontrado")  
+                self.__arquivoOutput.write("Nenhum registro encontrado.")  
+                print("Nenhum registro encontrado.")
             self.__del__()
             #print(canonKey)
     def getIdxPrim(self):
@@ -108,9 +106,9 @@ class IdxPrimario:
         #print(key)
         return (key)
 
-    def imprimeTabelaIndices(self, tabela):
-        for element in tabela:
-            print(element)
+    #def imprimeTabelaIndices(self, tabela):
+        #for element in tabela:
+            #print(element)
 
     #destrutor
     def __del__(self):    
@@ -137,23 +135,22 @@ class IdxPrimario:
         return size[1], top[1], registerQtd[1], status[1]
 
     def pesquisarSecundario(self, consulta, i):
-        print(f"{i[0]} + {consulta}")
-        if(i[0] == consulta.upper()):
-            print(i[0])
+        if(consulta.upper() in i[0]):
             return i[1]
         return -1
 
-    def pesquisarPrimario(self, canonKey, linhas, size):
+    def pesquisarPrimario(self, canonKey, linhas):
         for i in self.getIdxPrim():
-            #print(self.getIdxPrim())
-            #print(i[0])
             if i[1] == canonKey:
                 return linhas[int(i[0]) + 1]
         
 
 def main():
-    obj = IdxPrimario(dataFile = r"C:\Users\zania\OneDrive\Documentos\PYTHON\ED2\Arquivos\Atividade4\input\music.txt",
-     inputFile = r"C:\Users\zania\OneDrive\Documentos\PYTHON\ED2\Arquivos\Atividade4\input\entrada6.txt", outputFile= "output.txt")
+    if(len(sys.argv)!=4):
+        print("Número incorreto de parâmetros. \nSaindo do programa...")
+        exit(1)
+    IdxPrimario(dataFile = sys.argv[1],
+    inputFile = sys.argv[2], outputFile= sys.argv[3])
     
     
 
